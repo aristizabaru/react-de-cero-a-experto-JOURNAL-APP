@@ -1,5 +1,5 @@
-import { AppRouter } from "./modules/router/AppRouter";
-import { AppTheme } from "./modules/theme";
+import { AppRouter } from "./router/AppRouter";
+import { AppTheme } from "./modules/shared/theme";
 
 export const JournalApp = () => {
     return (
