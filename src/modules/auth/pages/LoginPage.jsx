@@ -1,4 +1,5 @@
-import { useDispatch } from "react-redux";
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { Grid, Typography, TextField, Button, Link } from "@mui/material";
 import { Google } from "@mui/icons-material";
@@ -9,68 +10,83 @@ import { checkingAuthentication, startGoogleSingIn } from "../../../store/auth";
 
 export const LoginPage = () => {
 
+    const { status } = useSelector( state => state.auth );
     const dispatch = useDispatch();
 
-    const { email, password, onInputChange } = useForm({
+    const { email, password, onInputChange } = useForm( {
         email: 'andres.aristizabal@gmail.com',
         password: '123456',
-    });
+    } );
 
-    const onSubmit = (event) => {
+    const isAuthenticated = useMemo( () => status === 'checking', [ status ] );
+
+    const onSubmit = ( event ) => {
         event.preventDefault();
 
-        dispatch(checkingAuthentication({ email, password }));
-        console.log({ email, password });
+        dispatch( checkingAuthentication( { email, password } ) );
+        console.log( { email, password } );
     };
 
     const onGoogleSingIn = () => {
-        dispatch(startGoogleSingIn());
+        dispatch( startGoogleSingIn() );
     };
 
     return (
         <AuthLayout title="Login">
-            <form onSubmit={onSubmit}>
+            <form onSubmit={ onSubmit }>
                 <Grid container>
-                    <Grid item xs={12} sx={{ marginTop: 2 }}>
+                    <Grid item xs={ 12 } sx={ { marginTop: 2 } }>
                         <TextField
                             label="Correo"
                             type="email"
                             placeholder="correo@google.com"
                             fullWidth
                             name='email'
-                            value={email}
-                            onChange={onInputChange}
+                            value={ email }
+                            onChange={ onInputChange }
                         />
                     </Grid>
-                    <Grid item xs={12} sx={{ marginTop: 2 }}>
+                    <Grid item xs={ 12 } sx={ { marginTop: 2 } }>
                         <TextField
                             label="Contraseña"
                             type="password"
                             placeholder="contraseña"
                             fullWidth
                             name='password'
-                            value={password}
-                            onChange={onInputChange}
+                            value={ password }
+                            onChange={ onInputChange }
                         />
                     </Grid>
                     <Grid
                         container
-                        spacing={2}
-                        sx={{ marginBottom: 2, marginTop: 1 }}
+                        spacing={ 2 }
+                        sx={ { marginBottom: 2, marginTop: 1 } }
                     >
-                        <Grid item xs={12} sm={6}>
-                            <Button type="submit" variant="contained" fullWidth>Login</Button>
+                        <Grid item xs={ 12 } sm={ 6 }>
+                            <Button
+                                disabled={ isAuthenticated }
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                            >
+                                Login
+                            </Button>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Button onClick={onGoogleSingIn} variant="contained" fullWidth>
+                        <Grid item xs={ 12 } sm={ 6 }>
+                            <Button
+                                disabled={ isAuthenticated }
+                                onClick={ onGoogleSingIn }
+                                variant="contained"
+                                fullWidth
+                            >
                                 <Google />
-                                <Typography sx={{ marginLeft: 1 }}>Google</Typography>
+                                <Typography sx={ { marginLeft: 1 } }>Google</Typography>
                             </Button>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" justifyContent="end">
                         <Link
-                            component={RouterLink}
+                            component={ RouterLink }
                             color="inherit"
                             to="/auth/register"
                         >
