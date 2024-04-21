@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const authSlice = createSlice({
+export const authSlice = createSlice( {
     name: 'auth',
     initialState: {
         status: 'not-authenticated', // 'checking', 'not-authenticated', 'authenticated'
@@ -11,15 +11,27 @@ export const authSlice = createSlice({
         errorMessage: null,
     },
     reducers: {
-        login: (state, /* action */) => {
+        login: ( state, { payload } ) => {
+            state.status = 'authenticated';
+            state.uid = payload.uid;
+            state.email = payload.email;
+            state.displayName = payload.displayName;
+            state.photoURL = payload.photoURL;
+            state.errorMessage = null;
         },
-        logout: (state, /* action */) => {
+        logout: ( state, { payload } ) => {
+            state.status = 'not-authenticated';
+            state.uid = null;
+            state.email = null;
+            state.displayName = null;
+            state.photoURL = null;
+            state.errorMessage = payload.errorMessage;
         },
-        checkingCredentials: (state, /* action */) => {
+        checkingCredentials: ( state, /* action */ ) => {
             state.status = 'checking';
         },
     }
-});
+} );
 
 
 // Action creators are generated for each case reducer function
