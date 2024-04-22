@@ -8,15 +8,17 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../shared/hooks/useForm";
 import { checkingAuthentication, startGoogleSingIn } from "../../../store/auth";
 
+const formData = {
+    email: 'andres.aristizabal@gmail.com',
+    password: '123456',
+};
+
 export const LoginPage = () => {
 
     const { status } = useSelector( state => state.auth );
     const dispatch = useDispatch();
 
-    const { email, password, onInputChange } = useForm( {
-        email: 'andres.aristizabal@gmail.com',
-        password: '123456',
-    } );
+    const { email, password, onInputChange } = useForm( formData );
 
     const isAuthenticated = useMemo( () => status === 'checking', [ status ] );
 
