@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from './journalSlice';
+import { addNewEmptyNote, noteUpdated, savingNewNote, setActiveNote, setNotes, setSaving } from './journalSlice';
 import { loadNotes } from '../../modules/journal/helpers';
 
 export const startNewNote = () => {
@@ -40,5 +40,34 @@ export const startLoadingNotes = () => {
 
         dispatch( setNotes( notes ) );
 
+    };
+};
+
+export const startSaveNote = () => {
+    return async ( dispatch, getState ) => {
+
+        dispatch( setSaving() );
+
+        const { uid } = getState().auth;
+        const { active: note } = getState().journal;
+
+        const noteToFirestore = { ...note };
+
+        // Así se elimina una propiedad de un objeto en JS
+        delete noteToFirestore.id;
+
+        const docRef = doc( FirebaseDB, `${uid}/journal/notes/${note.id}` );
+        await setDoc( docRef, noteToFirestore, { merge: true } );
+
+        dispatch( noteUpdated( note ) );
+
+    };
+};
+
+export const startUploadingFiles = ( files = [] ) => {
+    return async ( dispatch ) => {
+        dispatch( setSaving() );
+
+        console.log( files );
     };
 };
