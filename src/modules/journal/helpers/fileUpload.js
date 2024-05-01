@@ -16,13 +16,11 @@ export const fileUpload = async ( file ) => {
 
         if ( !response.ok ) throw new Error( 'No se pudo subir la imagen' );
 
-        const cloudResponse = await response.json();
-        console.log( cloudResponse );
+        const { url } = await response.json();
 
-        return cloudResponse;
+        return url;
 
     } catch ( error ) {
-        console.log( error );
         throw new Error( error.message );
     }
 
